@@ -15,6 +15,7 @@ export class Postagem{
 
     @Transform(({ value }: TransformFnParams) => value?.trim())//Remover espaços em branco início e fim
     @IsNotEmpty() // NOT NULL (força digitação)
+    @Length(10, 1000, {message: "O Texto deve ser entre 10 e 1000 caracteres"})
     @Column({length: 1000, nullable: false}) //VARCHAR(1000) NOT NULL
     texto: string;
 
