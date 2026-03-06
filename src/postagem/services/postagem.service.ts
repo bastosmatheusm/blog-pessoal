@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Postagem } from "../entities/postagem.entity";
 import { ILike, Repository } from "typeorm";
 import { DeleteResult } from "typeorm/browser";
+import { TemaService } from "../../tema/service/tema.service";
 
 
 @Injectable()
@@ -11,11 +12,16 @@ export class PostagemService{
     constructor(
         @InjectRepository(Postagem)
         private postagemRepository: Repository<Postagem>,
+        private readonly  temaService: TemaService
     ){}
 
     async findAll(): Promise<Postagem[]> {
 
-        return this.postagemRepository.find();//SELECT * FROM tb_postagens
+        return this.postagemRepository.find({
+            relations:{
+                tema: true
+            }
+        });//SELECT * FROM tb_postagens
     }
 
     async findById(id: number): Promise<Postagem>{
@@ -23,6 +29,9 @@ export class PostagemService{
         const postagem = await this.postagemRepository.findOne({
             where:{
                 id
+            },
+            relations:{
+                tema: true
             }
         })
 
@@ -38,11 +47,17 @@ export class PostagemService{
         return this.postagemRepository.find({
             where:{
                 titulo: ILike(`%${titulo}%`)
+            },
+            relations:{
+                tema: true
             }
         })
     }
 
     async create(postagem: Postagem): Promise<Postagem>{
+
+        await this.temaService.findById(postagem.tema.id);
+
         // INSERT INTO tb_postagens (titulo, texto) VALUES (?, ?);
         return await this.postagemRepository.save(postagem);
     }
@@ -51,6 +66,10 @@ export class PostagemService{
         if (!postagem.id || postagem.id <= 0){
             throw new HttpException("O ID da postagem é inválido!", HttpStatus.BAD_REQUEST);
         }
+        //Verifica se a postagem existe
+        await this.temaService.findById(postagem.tema.id);
+
+        //Verifica se o tema da postagem existe
         await this.findById(postagem.id);
         // UPDATE tb_postagens SET titulo = ?,
         // texto = ? ,
