@@ -1,20 +1,19 @@
-import { Transform, TransformFnParams } from "class-transformer";
-import { IsNotEmpty, Length } from "class-validator";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import { Postagem } from "../../postagem/entities/postagem.entity";
+import { Transform, TransformFnParams } from 'class-transformer';
+import { IsNotEmpty, Length } from 'class-validator';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Postagem } from '../../postagem/entities/postagem.entity';
 
-@Entity({name: "tb_temas"}) // CREATE TABLE tb_temas
-export class Tema{
-    
-    @PrimaryGeneratedColumn() //PRIMARY KEY(id) AUTO INCREMENT
+@Entity({ name: 'tb_temas' })
+export class Tema {
+    @PrimaryGeneratedColumn()
     id: number;
 
-    @Transform(({ value }: TransformFnParams) => value?.trim())//Remover espaços em branco início e fim
-    @IsNotEmpty() // NOT NULL (força digitação)
-    @Length(10, 255, {message: "A Descrição deve ser entre 10 e 255 caracteres"})
-    @Column({length: 255, nullable: false}) //VARCHAR(255) NOT NULL
+    @Transform(({ value }: TransformFnParams) => value?.trim())
+    @IsNotEmpty({ message: 'A Descrição é Obrigatória' })
+    @Length(5, 255, { message: 'A Descrição deve ter entre 10 e 100 caracteres' })
+    @Column({ length: 255, nullable: false })
     descricao: string;
 
-    @OneToMany(() => Postagem, (postagem) => postagem.tema)
-    postagem: Postagem[];
+    @OneToMany( () => Postagem, (postagem) => postagem.tema)
+    postagem: Postagem[]; // Array de retorno
 }
