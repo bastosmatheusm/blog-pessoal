@@ -7,32 +7,32 @@ import { ApiProperty } from "@nestjs/swagger"
 @Entity({name: "tb_usuarios"})
 export class Usuario {
 
-    @PrimaryGeneratedColumn()
     @ApiProperty() 
+    @PrimaryGeneratedColumn() 
     id: number
 
+    @ApiProperty() 
     @Transform(({ value }: TransformFnParams) => value?.trim())
     @IsNotEmpty()
-    @Column({length: 255, nullable: false})
-    @ApiProperty() 
+    @Column({length: 255, nullable: false}) 
     nome: string
 
+    @ApiProperty({example: "email@email.com.br"}) 
     @Transform(({ value }: TransformFnParams) => value?.trim())
     @IsEmail()
     @IsNotEmpty()
     @Column({length: 255, nullable: false })
-    @ApiProperty()
     usuario: string
 
+    @ApiProperty() 
     @Transform(({ value }: TransformFnParams) => value?.trim())
     @MinLength(8)
     @IsNotEmpty()
-    @Column({length: 255, nullable: false })
-    @ApiProperty() 
+    @Column({length: 255, nullable: false }) 
     senha: string
 
-    @Column({length: 5000 })
     @ApiProperty() 
+    @Column({length: 5000 }) 
     foto: string
 
     @ApiProperty()

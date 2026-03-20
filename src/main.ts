@@ -11,12 +11,21 @@ async function bootstrap() {
   .setDescription('Projeto Blog Pessoal')
   .setContact("Generation Brasil","http://www.generationbrasil.online","generation@email.com")
   .setVersion('1.0')
-  .addBearerAuth()
+  .addBearerAuth(
+    {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      in: 'header',
+      description: 'Informe o Token JWT **sem** o prefixo Bearer.',
+    }
+  )
   .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/swagger', app, document);
-
-  process.env.TZ= '-03:00';
+  
+  process.env.TZ = '-03:00';
 
   app.useGlobalPipes(new ValidationPipe());
 

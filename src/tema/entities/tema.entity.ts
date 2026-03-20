@@ -17,7 +17,7 @@ export class Tema {
     @ApiProperty()
     descricao: string;
 
-    @ApiProperty()
+    //@ApiProperty({ type: () => Postagem, isArray: true })
     @OneToMany( () => Postagem, (postagem) => postagem.tema)
     postagem: Postagem[]; // Array de retorno
 }
